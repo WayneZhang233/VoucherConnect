@@ -28,32 +28,32 @@ public class GetTokensAndWriteFiles {
 
     @Test
     void getTokensAndWriteFiles() throws IOException {
-        //查询用户信息 限制1000个
+        // Query user information, limit to 1000
         List<User> users = userService.lambdaQuery().last("limit 1000").list();
         FileWriter fr = null;
         try {
-            //文件位置
+            // File location
             fr = new FileWriter("D:\\Desktop\\jmeter_test\\tokens.txt");
-            //遍历每一个用户，并生成token
+            // Iterate through each user and generate tokens
             for (User user : users) {
-                //保存用户信息到 Redis 中
-                //随机生成 token 作为登录令牌
+                // Save user information to Redis
+                // Randomly generate token as a login token
                 String token = UUID.randomUUID().toString(true);
-                //将 user 对象 转化为 hashmap 存储
+                // Convert user object to hashmap for storage
                 UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
-                //字段名 字段值的类型都改成 String
-                //userDTO有Long id 需要字段值转换，通过setFieldValueEditor配置
+                // Change both field names and field values to String type
+                // userDTO has a Long id that needs value conversion, configured via setFieldValueEditor
                 Map<String, Object> userMap = BeanUtil.beanToMap(userDTO,
                         new HashMap<>(),
                         CopyOptions.create()
                                 .setIgnoreNullValue(true)
                                 .setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
-                //存储
+                // Store the data
                 String tokenKey = LOGIN_USER_KEY + token;
                 stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
-                //设置 token 有效期 comment out it temporarily
-//                stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
-                //将Redis中token写入文件中
+                // Set token expiration time (commented out temporarily)
+//            stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
+                // Write the token stored in Redis into the file
                 fr.append(token);
                 fr.append("\n");
             }

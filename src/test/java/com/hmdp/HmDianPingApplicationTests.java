@@ -65,17 +65,18 @@ class HmDianPingApplicationTests {
 
     @Test
     void testSaveShop() throws InterruptedException {
-        // 查询所有 shop 数据
-        List<Shop> allShops = shopService.list(); // 假设 shopService.list() 查询所有 shop 记录
+        // Query all shop data
+        List<Shop> allShops = shopService.list(); // Assuming shopService.list() retrieves all shop records
 
-        // 遍历所有 shop，将每个 shop 缓存
+        // Iterate through all shops and cache each one
         for (Shop shop : allShops) {
-            // 设置缓存，使用逻辑过期的方式
+            // Set cache using logical expiration method
             cacheClient.setWithLogicalExpired(CACHE_SHOP_KEY + shop.getId(), shop, 10L, TimeUnit.SECONDS);
         }
-//        Shop shop = shopService.getById(1L);
-//        cacheClient.setWithLogicalExpired(CACHE_SHOP_KEY + shop.getId(), shop, 10L, TimeUnit.SECONDS);
+//    Shop shop = shopService.getById(1L);
+//    cacheClient.setWithLogicalExpired(CACHE_SHOP_KEY + shop.getId(), shop, 10L, TimeUnit.SECONDS);
     }
+
 
     @Test
     void loadShopData() {
