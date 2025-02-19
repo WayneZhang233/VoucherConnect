@@ -38,17 +38,16 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
         }
 //        4. convert hash to userDTO
         UserDTO userDTO = BeanUtil.fillBeanWithMap(userMap, new UserDTO(), false);
-//        4. if exists, save it to threadLocal
+//        5. if exists, save it to threadLocal
         UserHolder.saveUser(userDTO);
-//        5. refresh token expiration period, comment the following line for test
+//        6. refresh token expiration period, comment the following line for test
 //        stringRedisTemplate.expire(tokenKey, RedisConstants.LOGIN_USER_TTL, TimeUnit.MINUTES);
-//        5. allow
+//        7. allow
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
         UserHolder.removeUser();
     }
 }

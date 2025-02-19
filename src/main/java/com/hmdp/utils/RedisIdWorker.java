@@ -30,11 +30,4 @@ public class RedisIdWorker {
 //        3. concatenate
         return timeStamp << COUNT_BITS | count;
     }
-
-//
-//    public static void main(String[] args) {
-//        LocalDateTime time = LocalDateTime.of(2025, 1, 1, 0, 0, 0);
-//        long second = time.toEpochSecond(ZoneOffset.UTC);
-//        System.out.println(second);
-//    }
 }
