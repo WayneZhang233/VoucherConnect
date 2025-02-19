@@ -8,10 +8,10 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @EnableAspectJAutoProxy(exposeProxy = true)
 @MapperScan("com.hmdp.mapper")
 @SpringBootApplication
-public class HmDianPingApplication {
+public class FoodServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(HmDianPingApplication.class, args);
+        SpringApplication.run(FoodServiceApplication.class, args);
     }
 
 }
