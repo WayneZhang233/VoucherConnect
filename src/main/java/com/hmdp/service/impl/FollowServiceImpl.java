@@ -43,7 +43,7 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
             }
         }else{
 //            delete from tb_follow where user_id = ? and follow_user_id = ?
-//            QueryWrapper 用于构建 SQL 查询条件，类似于 SQL 中的 WHERE 子句。
+//            QueryWrapper is used to build SQL query conditions, similar to the WHERE clause in SQL
             boolean isSuccess = remove(new QueryWrapper<Follow>()
                     .eq("user_id", userId).eq("follow_user_id", followUserId));
             if(isSuccess){

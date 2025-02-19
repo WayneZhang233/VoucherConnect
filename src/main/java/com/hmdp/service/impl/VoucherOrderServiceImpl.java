@@ -132,8 +132,8 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             }
         }
     }
-//    thread task
-    /*private BlockingQueue<VoucherOrder> orderTasks = new ArrayBlockingQueue<>(1024 * 1024);
+//    before optimization: blocking queue
+    /* private BlockingQueue<VoucherOrder> orderTasks = new ArrayBlockingQueue<>(1024 * 1024);
     private class VoucherOrderHandler implements Runnable {
 
         @Override
@@ -202,81 +202,6 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         return Result.ok(orderId);
     }
 
-    /*@Override
-    public Result seckillVoucher(Long voucherId) {
-        Long userId = UserHolder.getUser().getId();
-//        1. execute lua script, check the user can buy the voucher
-        Long result = stringRedisTemplate.execute(
-                SECKILL_SCRIPT,
-                Collections.emptyList(),
-                voucherId.toString(), userId.toString()
-        );
-        int r = result.intValue();
-//        2. check if return 0 (success)
-        if(r != 0){
-            return Result.fail(r == 1 ? "out of stock" : "duplicate orders from the same user");
-        }
-//        if 0, save the order information to the blocking queue
-        //        create order (encapsulation)
-        VoucherOrder voucherOrder = new VoucherOrder();
-//        order id
-        long orderId = redisIdWorker.nextId("order");
-        voucherOrder.setId(orderId);
-//        user id
-        voucherOrder.setUserId(userId);
-//        voucher id
-        voucherOrder.setVoucherId(voucherId);
-//        save it to the blocking queue
-        orderTasks.add(voucherOrder);
-
-        //            1. get a proxy object
-//            2. add a dependency (aspectj)
-//            3. add a annotation to the startup class
-        proxy = (IVoucherOrderService) AopContext.currentProxy();
-
-//        return order id
-        return Result.ok(orderId);
-    }*/
-
-   /* @Override
-    public Result seckillVoucher(Long voucherId) {
-//        1. query voucher
-        SeckillVoucher voucher = seckillVoucherService.getById(voucherId);
-//        2. check if flash sale started
-        if (voucher.getBeginTime().isAfter(LocalDateTime.now())) {
-            return Result.fail("the flash sale has not started yet!");
-        }
-//        3. check if flash sale stopped
-        if (voucher.getEndTime().isBefore(LocalDateTime.now())) {
-            return Result.fail("the flash sale has ended!");
-        }
-//        4. check if it is in stock
-        if (voucher.getStock() < 1) {
-            return Result.fail("it is out of stock!");
-        }
-
-        Long userId = UserHolder.getUser().getId();
-
-//        create a lock object
-//        SimpleRedisLock lock = new SimpleRedisLock("order:" + userId, stringRedisTemplate);
-//        use Redisson lock instead of custom lock
-        RLock lock = redissonClient.getLock("lock:order:" + userId);
-//        get the lock
-        boolean success = lock.tryLock();
-        if (!success) {
-            return Result.fail("each user can only place one order!");
-        }
-        try {
-//            1. get a proxy object
-//            2. add a dependency (aspectj)
-//            3. add a annotation to the startup class
-            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
-            return proxy.createVoucherOrder(voucherId);
-        } finally {
-//            release the lock
-            lock.unlock();
-        }
-    }*/
 
     @Transactional
     public void createVoucherOrder(VoucherOrder voucherOrder) {
@@ -290,7 +215,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             return;
         }
 
-        //        5. reduce stock
+        //        3. reduce stock
         boolean isSuccessful = seckillVoucherService.update()
                 .setSql("stock = stock - 1") // set stock = stock - 1
                 .eq("voucher_id", voucherOrder.getVoucherId()).gt("stock", 0) // where id = ? and stock > 0

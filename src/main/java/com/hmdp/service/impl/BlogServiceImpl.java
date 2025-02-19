@@ -47,13 +47,12 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
 
     @Override
     public Result queryHotBlog(Integer current) {
-        // 根据用户查询
         Page<Blog> page = query()
                 .orderByDesc("liked")
                 .page(new Page<>(current, SystemConstants.MAX_PAGE_SIZE));
-        // 获取当前页数据
+        // get current page data
         List<Blog> records = page.getRecords();
-        // 查询用户
+        // get the like status
         records.forEach(blog -> {
             this.queryBlogUser(blog);
             this.isBlogLiked(blog);
