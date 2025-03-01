@@ -2,4 +2,4 @@ logs/
 *.log
 *.exe
 temp/
-contrib/
+contrib/vim/
