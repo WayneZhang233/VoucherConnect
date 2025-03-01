@@ -2,3 +2,4 @@ logs/
 *.log
 *.exe
 temp/
+contrib/
