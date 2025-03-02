@@ -30,14 +30,14 @@
           text-color="#F63"
           show-score
       ></el-rate>
-      <span>{{shop.comments}}条</span>
+      <!-- <span>{{shop.comments}}条</span> -->
     </div>
-    <div class="shop-rate-info"> 口味:4.9  环境:4.8  服务:4.7 </div>
-    <div class="shop-rank">
+    <div class="shop-rate-info"> Taste: 4.9 | Ambience: 4.8 | Service: 4.7 </div>
+    <!-- <div class="shop-rank">
       <img src="/imgs/bd.png" width="63" height="20" alt="">
       <span>拱墅区好评榜第3名</span>
       <div><i class="el-icon-arrow-right"></i></div>
-    </div>
+    </div> -->
     <div class="shop-images">
       <div v-for="(s,i) in shop.images" :key="i">
         <img :src="s" alt="">
@@ -46,23 +46,27 @@
     <div class="shop-address">
       <div><i class="el-icon-map-location"></i></div>
       <span>{{shop.address}}</span>
-      <div style="width: 10px; flex-grow: 2; text-align: center; color: #e1e2e3">|</div>
-      <div style="margin: 0 5px"><img src="https://p0.meituan.net/travelcube/bf684aa196c870810655e45b1e52ce843484.png@24w_16h_40q" alt=""></div>
-      <div><img src="https://p0.meituan.net/travelcube/9277ace32123e0c9f59dedf4407892221566.png@24w_24h_40q" alt=""></div>
+      <!-- <div style="width: 10px; flex-grow: 2; text-align: center; color: #e1e2e3">|</div> -->
+      <!-- <div style="margin: 0 5px"><img src="https://p0.meituan.net/travelcube/bf684aa196c870810655e45b1e52ce843484.png@24w_16h_40q" alt=""></div>
+      <div><img src="https://p0.meituan.net/travelcube/9277ace32123e0c9f59dedf4407892221566.png@24w_24h_40q" alt=""></div> -->
     </div>
   </div>
   <div class="shop-divider"></div>
   <div class="shop-open-time">
     <span><i class="el-icon-watch"></i></span>
-    <div>营业时间</div>
-    <div>{{shop.openHours}}</div>
-    <span class="line-right">查看详情 <i class="el-icon-arrow-right"></i></span>
+    <table width="100%">
+        <tr>
+            <td>Opening Hours</td>
+            <td align="right">{{shop.openHours}}</td>
+        </tr>
+    </table>
   </div>
+
   <div class="shop-divider"></div>
   <div class="shop-voucher">
     <div>
-      <span class="voucher-icon">券</span>
-      <span style="font-weight: bold;">代金券</span>
+      <span class="voucher-icon">Voucher</span>
+      <span style="font-weight: bold;">Voucher</span>
     </div>
     <div class="voucher-box" v-for="v in vouchers" :key="v.id" v-if="!isEnd(v)">
       <div class="voucher-circle">
@@ -73,20 +77,29 @@
       <div class="voucher-left">
         <div class="voucher-title">{{v.title}}</div>
         <div class="voucher-subtitle">{{v.subTitle}}</div>
-        <div class="voucher-price"><div>￥ {{util.formatPrice(v.payValue)}}</div>  <span>{{(v.payValue*10)/v.actualValue}}折</span></div>
+        <div class="voucher-price">
+          <div>S$ {{util.formatPrice(v.payValue)}}</div>  
+          <span>{{Math.round((1 - v.payValue / v.actualValue) * 100)}}% Off</span>
+      </div>
+      
       </div>
       <div class="voucher-right">
         <div v-if="v.type" class="seckill-box">
-          <div class="voucher-btn" :class="{'disable-btn': isNotBegin(v) || v.stock < 1}" @click="seckill(v)">限时抢购</div>
-          <div class="seckill-stock">剩余 <span>{{v.stock}}</span> 张</div>
+          <div class="voucher-btn" 
+            :class="{'disable-btn': isNotBegin(v) || v.stock < 1}" 
+            @click="seckill(v)" 
+            style="white-space: nowrap; min-width: 100px;">
+            Grab Now
+        </div>
+          <div class="seckill-stock">Only <span>{{v.stock}}</span> Left</div>
           <div class="seckill-time">{{formatTime(v)}}</div>
         </div>
-        <div class="voucher-btn" v-else>抢购</div>
+        <div class="voucher-btn" v-else style="white-space: nowrap; min-width: 100px;">Grab Now</div>
       </div>
     </div>
   </div>
   <div class="shop-divider"></div>
-  <div class="shop-comments">
+  <!-- <div class="shop-comments">
     <div class="comments-head">
       <div>网友评价 <span>（119）</span></div>
       <div><i class="el-icon-arrow-right"></i></div>
@@ -132,11 +145,8 @@
         <div><i class="el-icon-arrow-right"></i></div>
       </div>
     </div>
-  </div>
-  <div class="shop-divider"></div>
-  <div class="copyright">
-    copyright ©2021 hmdp.com
-  </div>
+  </div> -->
+  <!-- <div class="shop-divider"></div> -->
 </div>
 <script src="./js/vue.js"></script>
 <script src="./js/axios.min.js"></script>
@@ -179,14 +189,20 @@
         })
         .catch(this.$message.error)
       },
-      formatTime(v){
+      formatTime(v) {
         let b = new Date(v.beginTime);
         let e = new Date(v.endTime);
-        return b.getMonth() + 1 + "月" + b.getDate() + "日 "
-          +  b.getHours() + ":" + this.formatMinutes(b.getMinutes())
-          + " ~ "/*  + e.getMonth() + 1 + "月" + e.getDate() + "日 " */
-          +  e.getHours() + ":" + this.formatMinutes(e.getMinutes());
+
+        // 获取月份名称（短格式，如 "Mar"）
+        const options = { month: "short", day: "numeric" };
+        let startDate = b.toLocaleDateString("en-US", options); // "Mar 3"
+        
+        return startDate + " " + 
+              b.getHours() + ":" + this.formatMinutes(b.getMinutes()) +
+              " ~ " + 
+              e.getHours() + ":" + this.formatMinutes(e.getMinutes());
       },
+
       formatMinutes(m){
         if(m < 10) m = "0" + m
         return m;
@@ -197,35 +213,35 @@
       isEnd(v){
         return new Date(v.endTime).getTime() < new Date().getTime();
       },
-      seckill(v){
-        if(!token){
-          this.$message.error("请先登录")
-          // 未登录，跳转
-          setTimeout(() => {
-            location.href = "/login.html"
-          }, 200);
-          return;
+      seckill(v) {
+        if (!token) {
+            this.$message.error("Please log in first.");
+            // Redirect to login page
+            setTimeout(() => {
+                location.href = "/login.html";
+            }, 200);
+            return;
         }
-        if(this.isNotBegin(v)){
-          this.$message.error("优惠券抢购尚未开始！")
-          return;
+        if (this.isNotBegin(v)) {
+            this.$message.error("The voucher sale has not started yet!");
+            return;
         }
-        if(this.isEnd(v)){
-          this.$message.error("优惠券抢购已经结束！")
-          return;
+        if (this.isEnd(v)) {
+            this.$message.error("The voucher sale has ended!");
+            return;
         }
-        if(v.stock < 1){
-          this.$message.error("库存不足，请刷新再试试！")
-          return;
+        if (v.stock < 1) {
+            this.$message.error("Out of stock. Please refresh and try again!");
+            return;
         }
         let id = v.id;
-        // 秒杀抢购
+        // Flash sale purchase
         axios.post("/voucher-order/seckill/" + id)
-        .then(({data}) => {
-          // 抢购成功，这里输出订单id，支付功能TODO
-          this.$message.success("抢购成功，订单id：" + data)
-        })
-        .catch(this.$message.error)
+            .then(({ data }) => {
+                // Purchase successful, output order ID (TODO: Implement payment feature)
+                this.$message.success("Purchase successful! Order ID: " + data);
+            })
+            .catch(this.$message.error);
       }
     }
   })

@@ -57,13 +57,13 @@
               text-color="#F63"
               show-score
           ></el-rate>
-          <span>{{s.comments}} reviews</span>
+          <!-- <span>{{s.comments}} reviews</span> -->
         </div>
         <div class="shop-area shop-item">
           <span>{{s.area}}</span>
           <span v-if="s.distance">{{s.distance < 1000 ? s.distance.toFixed(1) + 'm' : (s.distance/1000).toFixed(1) + 'km'}}</span>
         </div>
-        <div class="shop-avg shop-item">￥{{s.avgPrice}}/person</div>
+        <div class="shop-avg shop-item">S${{s.avgPrice}} per person</div>
         <div class="shop-address shop-item">
           <i class="el-icon-map-location"></i>
           <span>{{s.address}}</span>
@@ -139,7 +139,8 @@
         this.queryShops();
       },
       goBack() {
-        history.back();
+        // history.back();
+        location.href = "/index.html";
       },
       toDetail(id) {
         location.href = "/shop-detail.html?id="+id

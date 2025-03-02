@@ -93,7 +93,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
                 .search(
                         key,
                         GeoReference.fromCoordinate(x, y),
-                        new Distance(5000),
+                        new Distance(5000000),
                         RedisGeoCommands.GeoSearchCommandArgs.newGeoSearchArgs().includeDistance().limit(end)
                 );
 
