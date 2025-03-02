@@ -3,3 +3,7 @@ logs/
 *.exe
 temp/
 contrib/vim/
+html/hmdp/css/element.css
+html/hmdp/js/element.js
+html/hmdp/js/axios.min.js
+html/hmdp/js/vue.js

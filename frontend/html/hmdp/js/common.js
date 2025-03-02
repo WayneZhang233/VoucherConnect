@@ -29,9 +29,9 @@ axios.interceptors.response.use(function (response) {
     setTimeout(() => {
       location.href = "/login.html"
     }, 200);
-    return Promise.reject("请先登录");
+    return Promise.reject("Please log in first");
   }
-  return Promise.reject("服务器异常");
+  return Promise.reject("Server Error");
 });
 axios.defaults.paramsSerializer = function(params) {
   let p = "";
