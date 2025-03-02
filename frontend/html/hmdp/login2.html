@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>黑马点评</title>
+  <title>RateIt</title>
   
   <!-- 确保样式一致 -->
   <link href="./css/main.css" rel="stylesheet">
@@ -40,18 +40,6 @@
         <el-button @click="login" style="width: 100%; background-color:#f63; color: #fff;">Log In</el-button>
         <div style="text-align: right; color:#333333; margin: 5px 0"><a href="/login.html">Verification Code Login</a></div>
       </div>
-      <div class="login-radio">
-        <div>
-          <input type="radio" name="readed" v-model="radio" value="1">
-          <label for="readed"></label>
-        </div>
-        <div>I have read and agree to 
-          <a href="javascript:void(0)">
-          "User Service Agreement"</a>, 
-          <a href="javascript:void(0)">"Privacy Policy"</a>, 
-          and other terms, including bold-marked clauses that exempt or limit liability and stipulate jurisdiction.
-      </div>
-      </div>
     </div>
   </div>
 </div>
@@ -70,10 +58,6 @@
     },
     methods: {
       login(){
-        if(!this.radio){
-          this.$message.error("Please confirm that you have read the User Agreement first!");
-          return;
-        }
         axios.post("/user/login", this.form)
           .then(({data}) => {
             if(data){
