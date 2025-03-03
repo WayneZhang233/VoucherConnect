@@ -1,5 +1,5 @@
-# Food-Service-Management-System
-A food service management platform integrating merchant discount publishing, user coupon purchasing, and store visit notes posting using Spring Boot. Key features include user login, flash sale coupon purchasing, note posting, and engagement functions such as liking and following.
+# Local-Business-Service-Platform
+A local business service platform, integrating **merchant discount publishing, user voucher purchasing, and store visit notes posting** using Spring Boot. Key features include user login, flash sale voucher purchasing, note posting, and engagement functions such as liking and following. The platform solves the problem of **scattered discount information** across various businesses and provides an engaging community.
 
 Adopting a front-end and back-end separation model, with the back-end deployed on Tomcat and the front-end deployed on Nginx.
 
