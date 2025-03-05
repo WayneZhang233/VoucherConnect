@@ -1,5 +1,5 @@
-# Local-Business-Service-Platform
-A local business service platform, integrating **merchant discount publishing, user voucher purchasing, and store visit notes posting** using Spring Boot. Key features include user login, flash sale voucher purchasing, note posting, and engagement functions such as liking and following. The platform solves the problem of **scattered discount information** across various businesses and provides an engaging community.
+# VoucherConnect
+A deals and engagement platform for **merchant discount publishing, voucher purchasing, note posting, and user engagement features like liking and following**. The platform solves the problem of **scattered discount information** across various businesses and provides an engaging community.
 
 Adopting a front-end and back-end separation model, with the back-end deployed on Tomcat and the front-end deployed on Nginx.
 
