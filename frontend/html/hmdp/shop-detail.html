@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>RateIt</title>
+  <title>VoucherConnect</title>
   <!-- 引入样式 -->
   <link rel="stylesheet" href="./css/element.css">
 
@@ -94,7 +94,10 @@
           <div class="seckill-stock">Only <span>{{v.stock}}</span> Left</div>
           <div class="seckill-time">{{formatTime(v)}}</div>
         </div>
-        <div class="voucher-btn" v-else style="white-space: nowrap; min-width: 100px;">Grab Now</div>
+        <div class="voucher-btn" v-else @click="showMessage" 
+         style="white-space: nowrap; min-width: 100px; font-size: 12px; cursor: pointer;">
+        Grab Now
+        </div>
       </div>
     </div>
   </div>
@@ -213,6 +216,9 @@
       isEnd(v){
         return new Date(v.endTime).getTime() < new Date().getTime();
       },
+      showMessage() {
+        this.$message.success("Purchase successful!");
+      },
       seckill(v) {
         if (!token) {
             this.$message.error("Please log in first.");
@@ -239,7 +245,8 @@
         axios.post("/voucher-order/seckill/" + id)
             .then(({ data }) => {
                 // Purchase successful, output order ID (TODO: Implement payment feature)
-                this.$message.success("Purchase successful! Order ID: " + data);
+                // this.$message.success("Purchase successful! Order ID: " + data);
+                this.$message.success("Purchase successful!");
             })
             .catch(this.$message.error);
       }
