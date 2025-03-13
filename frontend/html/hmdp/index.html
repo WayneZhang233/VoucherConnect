@@ -20,14 +20,11 @@
 <body>
 <div id="app">
   <div class="search-bar">
-    <div class="city-btn">Singapore <i class="el-icon-arrow-down"></i></div>
-    <div class="search-input">
-      <el-input size="mini" placeholder="Please enter the merchant name">
-        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-      </el-input>
-    </div>
+    <div class="city-btn">Singapore</div>
+    <div class="placeholder-text"><h3>Welcome to VoucherConnect !</h3></div>
     <div class="header-icon" @click="toPage(4)"><i class="el-icon-user"></i></div>
   </div>
+  
   <div class="type-list">
     <div class="type-box" v-for="t in types" :key="t.id" @click="toShopList(t.id, t.name)">
       <div class="type-view"><img :src="'/imgs/' + t.icon" alt=""></div>
@@ -76,6 +73,11 @@
       this.queryHotBlogsScroll();
     },
     methods: {
+      toPage(pageNumber) {
+        if (pageNumber === 4) {
+          location.href = "/info.html"; // 跳转到主页
+        }
+      },
       queryTypes() {
         axios.get("/shop-type/list")
           .then(({data}) => {

@@ -69,8 +69,23 @@
         </div>
       </el-tab-pane>
       <!-- <el-tab-pane label="Review" name="2"></el-tab-pane> -->
-      <el-tab-pane label="Fans(0)" name="3"></el-tab-pane>
-      <el-tab-pane label="Follow(0)" name="4">
+      <!-- <el-tab-pane label="Followers" name="3"></el-tab-pane> -->
+      <el-tab-pane :label="'Followers'" name="3">
+        <div class="followers-list">
+          <div v-for="user in followersList" :key="user.id" class="followers-item">
+            <span class="followers-name">{{ user.nickName }}</span>
+          </div>
+        </div>
+      </el-tab-pane>      
+      <!-- <el-tab-pane label="Follow(0)" name="4"></el-tab-pane> -->
+      <el-tab-pane :label="'Following'" name="4">
+        <div class="follow-list">
+          <div v-for="user in followingList" :key="user.id" class="follow-item">
+            <span class="follow-name">{{ user.nickName }}</span>
+          </div>
+        </div>
+      </el-tab-pane>
+      
         <div class="blog-list" @scroll="onScroll">
           <div class="blog-box" v-for="b in blogs2" :key="b.id">
             <div class="blog-img2" @click="toBlogDetail(b)"><img :src="b.img" alt=""></div>
@@ -110,6 +125,8 @@
       info: {},
       blogs: [],
       blogs2: [], // 关注的人的播客
+      followingList: [], // 存储关注的用户信息
+      followersList: [], // 粉丝列表
       params: {
         minTime: 0, // 上一次拉取到的时间戳
         offset: 0, // 偏移量
@@ -129,6 +146,27 @@
           .then(({data}) => this.blogs = data)
           .catch(this.$message.error)
       },
+
+      queryFollowing() {
+        axios.get("/follow/following") // 不再传递 id
+          .then(({ data }) => {
+            this.followingList = data; // 存储关注用户列表
+          })
+          .catch(error => {
+            this.$message.error(error.message);
+          });
+      },
+
+      queryFollowers() {
+        axios.get("/follow/followers") // 假设后端提供 `/follow/followers`
+          .then(({ data }) => {
+            this.followersList = data; // 存储粉丝用户列表
+          })
+          .catch(error => {
+            this.$message.error(error.message);
+          });
+      },
+
       queryBlogsOfFollow(clear) {
         if (clear) {
           this.params.offset = 0;
@@ -197,7 +235,10 @@
       },
       handleClick(r) {
         if (r.name === '4') {
-          this.queryBlogsOfFollow(true);
+          // this.queryBlogsOfFollow(true);
+          this.queryFollowing();
+        }else if (r.name === "3") {
+          this.queryFollowers();
         }
       },
       addLike(b) {

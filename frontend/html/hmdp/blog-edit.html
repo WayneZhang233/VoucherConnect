@@ -17,7 +17,7 @@
 <div id="app">
   <div class="header">
     <div class="header-cancel-btn" @click="goBack">Cancel</div>
-    <div class="header-title">&nbsp;&nbsp;Post Note<i class="el-icon-info"></i></div>
+    <div class="header-title">&nbsp;&nbsp;Create a Note</i></div>
     <div class="header-commit">
       <div class="header-commit-btn" @click="submitBlog">Publish</div>
     </div>
@@ -39,7 +39,7 @@
     <input v-model="params.title" type="text" placeholder="Add a title">
   </div>
   <div class="blog-content">
-    <textarea v-model="params.content" placeholder="Where have you recently checked in? Any new and exciting experiences?"></textarea>
+    <textarea v-model="params.content" placeholder="Add some content"></textarea>
   </div>
   <div class="divider"></div>
   <div class="blog-shop" @click="showDialog=true">

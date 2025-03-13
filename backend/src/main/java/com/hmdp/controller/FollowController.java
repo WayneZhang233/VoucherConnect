@@ -2,10 +2,12 @@ package com.hmdp.controller;
 
 
 import com.hmdp.dto.Result;
+import com.hmdp.entity.User;
 import com.hmdp.service.IFollowService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 @RestController
@@ -28,5 +30,15 @@ public class FollowController {
     @GetMapping("/common/{id}")
     public Result followCommons(@PathVariable("id") Long id) {
         return followService.followCommons(id);
+    }
+
+    @GetMapping("/following")
+    public Result getFollowing() {
+        return followService.getFollowingByUserId();
+    }
+
+    @GetMapping("/followers")
+    public Result getFollowers() {
+        return followService.getFollowersByUserId();
     }
 }

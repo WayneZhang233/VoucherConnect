@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hmdp.dto.Result;
 import com.hmdp.dto.UserDTO;
 import com.hmdp.entity.Follow;
+import com.hmdp.entity.User;
 import com.hmdp.mapper.FollowMapper;
 import com.hmdp.service.IFollowService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -78,5 +79,71 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
                 .map(user -> BeanUtil.copyProperties(user, UserDTO.class))
                 .collect(Collectors.toList());
         return Result.ok(userDTOS);
+    }
+
+    @Override
+    public Result getFollowingByUserId() {
+        // 1. 从 UserHolder 获取当前登录用户
+        UserDTO userDTO = UserHolder.getUser();
+        if (userDTO == null) {
+            return Result.fail("User not logged in");
+        }
+        Long userId = userDTO.getId();
+
+        // 2. 查询 follow 表，找到该用户关注的所有用户 ID
+        List<Long> followingIds = query()
+                .select("follow_user_id")
+                .eq("user_id", userId)
+                .list()
+                .stream()
+                .map(Follow::getFollowUserId)
+                .collect(Collectors.toList());
+
+        // 3. 如果没有关注任何人，返回空列表
+        if (followingIds.isEmpty()) {
+            return Result.ok(Collections.emptyList());
+        }
+
+        // 4. 查询 User 表获取详细用户信息，并转换为 UserDTO
+        List<UserDTO> followingUsers = userService.listByIds(followingIds)
+                .stream()
+                .map(user -> BeanUtil.copyProperties(user, UserDTO.class))
+                .collect(Collectors.toList());
+
+        // 5. 返回查询结果
+        return Result.ok(followingUsers);
+    }
+
+    @Override
+    public Result getFollowersByUserId() {
+        // 1. 获取当前登录用户 ID
+        UserDTO user = UserHolder.getUser();
+        if (user == null) {
+            return Result.fail("User not logged in");
+        }
+        Long userId = user.getId();
+
+        // 2. 查询 follow 表，找到关注当前用户的所有用户 ID（粉丝 ID）
+        List<Long> followerIds = query()
+                .select("user_id")  // 这里是粉丝的 ID
+                .eq("follow_user_id", userId)  // 关注当前用户
+                .list()
+                .stream()
+                .map(Follow::getUserId) // 获取粉丝 ID
+                .collect(Collectors.toList());
+
+        // 3. 如果没有粉丝，返回空列表
+        if (followerIds.isEmpty()) {
+            return Result.ok(Collections.emptyList());
+        }
+
+        // 4. 查询 User 表获取详细粉丝信息
+        List<UserDTO> followers = userService.listByIds(followerIds)
+                .stream()
+                .map(userEntity -> BeanUtil.copyProperties(userEntity, UserDTO.class))
+                .collect(Collectors.toList());
+
+        // 5. 返回查询结果
+        return Result.ok(followers);
     }
 }

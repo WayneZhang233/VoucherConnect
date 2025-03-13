@@ -166,7 +166,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
 //        2. query the inbox     ZREVRANGEBYSCORE key max min LIMIT offset count
         String key = FEED_KEY + userId;
         Set<ZSetOperations.TypedTuple<String>> typedTuples = stringRedisTemplate.opsForZSet()
-                .reverseRangeByScoreWithScores(key, 0, max, offset, 2);
+                .reverseRangeByScoreWithScores(key, 0, max, offset, 1);
         if(typedTuples == null || typedTuples.isEmpty()){
             return Result.ok();
         }

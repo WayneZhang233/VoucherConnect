@@ -16,14 +16,25 @@
 </head>
 <body>
 <div id="app">
-  <div class="header">
+  <!-- <div class="header">
     <div class="header-back-btn" @click="goBack"><i class="el-icon-arrow-left"></i></div>
     <div class="header-title">{{typeName}}</div>
     <div class="header-search">
       <i class="el-icon-search"></i>
     </div>
+  </div> -->
+  <div class="header">
+    <div class="header-back-btn" @click="goBack">
+        <i class="el-icon-arrow-left"></i>
+    </div>
+    <div class="header-title">{{typeName}}</div>
+    <!-- <div class="header-placeholder"></div> -->
+    <div class="header-back-btn">
+      
+    </div>
   </div>
-  <div class="sort-bar">
+
+  <!-- <div class="sort-bar">
     <div class="sort-item">
       <el-dropdown trigger="click" @command="handleCommand">
       <span class="el-dropdown-link">
@@ -45,30 +56,26 @@
     <div class="sort-item" @click="sortAndQuery('score')">
       Rating <i class="el-icon-arrow-down el-icon--right"></i>
     </div>
-  </div>
+  </div> -->
   <div class="shop-list" @scroll="onScroll">
     <div class="shop-box" v-for="s in shops" :key="s.id" @click="toDetail(s.id)">
       <div class="shop-img"><img :src="s.images" alt=""></div>
       <div class="shop-info">
         <div class="shop-title shop-item">{{s.name}}</div>
-        <div class="shop-rate shop-item" >
-          <el-rate
-              disabled v-model="s.score/10"
-              text-color="#F63"
-              show-score
-          ></el-rate>
-          <!-- <span>{{s.comments}} reviews</span> -->
-        </div>
+        <div style="height: 5px;"></div> <!-- 占位符 -->
         <div class="shop-area shop-item">
           <span>{{s.area}}</span>
-          <span v-if="s.distance">{{s.distance < 1000 ? s.distance.toFixed(1) + 'm' : (s.distance/1000).toFixed(1) + 'km'}}</span>
         </div>
+        <div style="height: 5px;"></div> <!-- 占位符 -->
         <div class="shop-avg shop-item">S${{s.avgPrice}} per person</div>
+        <div style="height: 5px;"></div> <!-- 占位符 -->
         <div class="shop-address shop-item">
           <i class="el-icon-map-location"></i>
           <span>{{s.address}}</span>
         </div>
       </div>
+      
+    
     </div>
   </div>
 </div>
