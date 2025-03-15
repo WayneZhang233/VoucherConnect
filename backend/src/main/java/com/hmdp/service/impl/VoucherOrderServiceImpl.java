@@ -229,4 +229,9 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
 //        save it to db
         save(voucherOrder);
     }
+
+    @Override
+    public Result purchaseVoucher(Long voucherId) {
+        return Result.ok();
+    }
 }

@@ -94,7 +94,7 @@
           <div class="seckill-stock">Only <span>{{v.stock}}</span> Left</div>
           <div class="seckill-time">{{formatTime(v)}}</div>
         </div>
-        <div class="voucher-btn" v-else @click="showMessage" 
+        <div class="voucher-btn" v-else @click="showMessage(v)" 
          style="white-space: nowrap; min-width: 100px; font-size: 12px; cursor: pointer;">
         Grab Now
         </div>
@@ -216,8 +216,22 @@
       isEnd(v){
         return new Date(v.endTime).getTime() < new Date().getTime();
       },
-      showMessage() {
-        this.$message.success("Purchase successful!");
+      showMessage(v) {
+        if (!token) {
+            this.$message.error("Please log in first.");
+            // Redirect to login page
+            setTimeout(() => {
+                location.href = "/login.html";
+            }, 200);
+            return;
+        }
+        let id = v.id;
+        // Flash sale purchase
+        axios.post("/voucher-order/purchase/" + id)
+            .then(({ data }) => {
+                this.$message.success("Purchase successful!");
+            })
+            .catch(this.$message.error);
       },
       seckill(v) {
         if (!token) {
