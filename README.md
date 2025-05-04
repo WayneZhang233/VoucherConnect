@@ -1,6 +1,6 @@
 # VoucherConnect
 
-**VoucherConnect** is a high-concurrency voucher system designed to support merchant-issued promotions and large-scale, time-sensitive voucher claiming by users. The system is built to ensure consistency, reliability, and performance under extreme traffic surges such as flash sales.
+**VoucherConnect** is a **high-concurrency** voucher system designed to support merchant-issued promotions and **large-scale, time-sensitive voucher claiming by users**. The system is built to ensure **consistency, reliability, and performance under extreme traffic surges**.
 
 ---
 
@@ -12,7 +12,7 @@
 - **Stateless Authentication**  
   - Implemented using **JWT** and **Redis**  
   - Login state is refreshed via interceptors  
-  - User context is managed using `ThreadLocal`
+  - User context is managed using **ThreadLocal**
 
 - **Reliable Voucher Claim Pipeline**  
   - Asynchronous claim processing using **Kafka** and **local message tables**  
@@ -23,11 +23,11 @@
   - Guarantees **eventual consistency** for successful claims
 
 - **Resilient Caching Strategies**  
-  - **Penetration Prevention**: Used Bloom filters and null caching to block invalid requests  
+  - **Penetration Prevention**: Used **Bloom filters** and **null caching** to block invalid requests  
   - **Breakdown Handling**:  
-    - For **hot keys**: applied logical expiration with asynchronous rebuilding  
+    - For **hot keys**: applied **logical expiration** with asynchronous rebuilding  
     - For **normal keys**: used **Redisson** distributed locks to prevent cache stampede  
-  - **Avalanche Mitigation**: Introduced randomized TTLs to stagger cache expirations
+  - **Avalanche Mitigation**: Introduced **randomized TTLs** to stagger cache expirations
 
 - **Traffic Control & Protection**  
   - Configured **Nginx** as a centralized gateway with IP-based rate limiting  
@@ -44,9 +44,8 @@
 - **Caching**: Redis  
 - **Distributed Locking & Atomicity**: Redisson, Redis Lua scripts  
 - **Asynchronous Messaging**: Kafka, local message table  
-- **Scheduling**: Spring Scheduler (retry, compensation tasks)  
+- **Scheduled Tasks**: Spring Scheduler (for retry and compensation) 
 - **Authentication**: JWT, Redis, ThreadLocal  
-- **Traffic Management**: Nginx, Redis + Lua-based sliding window rate limiter  
+- **Traffic Management**: Nginx, Redis, Lua (custom sliding window rate limiter)
 - **Others**: Bloom filters
-
 
